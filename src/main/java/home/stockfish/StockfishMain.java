@@ -90,7 +90,7 @@ public final class StockfishMain {
             do {
                 move = getMove(fen, moveCount, thinkingTime);
                 if (NONE.equals(move)) {
-                    log.warn("No valid moves available. Game over.");
+                    log.debug("No valid moves available. Game over.");
                     generateGameReport(BEST_MOVES, initialFen.replace(" moves ", ""));
                     break;
                 } else {
@@ -139,12 +139,9 @@ public final class StockfishMain {
         // Read the output for the best move
         final String bestMoveResponse = CLIENT.readOutput("bestmove", 75_000);
         final String move = extractBestMove(bestMoveResponse);
-        if (log.isInfoEnabled()) {
-            log.info("Move {} {}", moveCount / 2, move);
-        }
         final String algebraicMove = convertToAlgebraicNotation(move, getFen());
-        if (log.isInfoEnabled()) {
-            log.info("Move {} {}", moveCount / 2, algebraicMove);
+        if (log.isDebugEnabled()) {
+            log.debug("Move {} {}", moveCount / 2, algebraicMove);
         }
         return move;
     }
@@ -225,8 +222,9 @@ public final class StockfishMain {
         if (lastLineIndex != -1) {
             boardOutput = boardOutput.substring(0, lastLineIndex);
         }
-
-        log.info("\n{}", boardOutput);
+        if (log.isDebugEnabled()) {
+            log.debug("\n{}", boardOutput);
+        }
     }
 
     /**

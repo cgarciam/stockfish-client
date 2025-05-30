@@ -99,18 +99,16 @@ public /*final*/ class StockfishConfig {
         return fen;
     }
 
-    /**
-     * Prints all possible movements from the current position.
-     *
-     * @param client The Stockfish client instance.
-     */
+    /** Prints all possible movements from the current position. */
     private void printAllPossibleMoves() {
         StockfishMain.print(client);
 
         // Get all possible moves using the 'go perft' command
         client.sendCommand("go perft 1");
         final String possibleMoves = client.readOutput("Nodes searched", 20_000);
-        log.info("All possible moves:\n------------------------{}\n----------------------", possibleMoves);
+        if (log.isDebugEnabled()) {
+            log.debug("All possible moves:\n------------------------{}\n----------------------", possibleMoves);
+        }
     }
 
 }

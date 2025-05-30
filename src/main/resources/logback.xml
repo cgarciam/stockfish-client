@@ -6,7 +6,7 @@
   </appender>
 
   <logger name="org"  level="WARN"/>
-  <logger name="home" level="DEBUG"/>
+  <logger name="home" level="INFO"/>
 
   <root level="INFO">
     <appender-ref ref="STDOUT" />
