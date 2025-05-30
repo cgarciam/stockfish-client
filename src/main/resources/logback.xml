@@ -1,0 +1,14 @@
+<configuration>
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%C.%M.%L %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <logger name="org"  level="WARN"/>
+  <logger name="home" level="DEBUG"/>
+
+  <root level="INFO">
+    <appender-ref ref="STDOUT" />
+  </root>
+</configuration>
