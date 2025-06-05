@@ -12,6 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.github.bhlangonijr.chesslib.Board;
 import com.github.louism33.chesscore.Chessboard;
+import com.github.louism33.utils.MoveParserFromAN;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -267,6 +268,16 @@ public final class StockfishMain {
             log.debug("FEN: {}", fen);
         }
         return fen;
+    }
+
+    public static String fromMovesToFen(final String moves) {
+        final Chessboard chessboard = new Chessboard();
+        final String[] moveList = moves.split(" ");
+        for (final String move : moveList) {
+            final int iMove = MoveParserFromAN.buildMoveFromAN(chessboard, move);
+            chessboard.makeMoveAndFlipTurn(iMove);
+        }
+        return chessboard.toFenString();
     }
 
 }
