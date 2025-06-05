@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 
 /** Main class to run the Stockfish chess engine. */
 @Slf4j
-//@SuppressWarnings({"PMD.GodClass", "PMD.TooManyMethods"})
 public final class MoveUtils {
 
     private MoveUtils() {
@@ -26,7 +25,7 @@ public final class MoveUtils {
      * @param lan        The move in LAN format (e.g., "e5f6").
      * @return The move in SAN format (e.g., "exf6").
      */
-//    @SuppressWarnings({"PMD.CommentSize"})
+    // @SuppressWarnings({"PMD.CommentSize"})
     public static String lanToSan(final Board board, final Chessboard chessboard, final String lan) {
         validate(board, chessboard, lan);
 
@@ -34,16 +33,17 @@ public final class MoveUtils {
         final Board tempBoard = new Board();
         tempBoard.loadFromFen(board.getFen());
 
-        if (log.isDebugEnabled()) {
-            log.debug("Board:\n{}", tempBoard);
+        if (log.isTraceEnabled()) {
+            log.trace("Board:\n{}", tempBoard);
         }
 
-        final String san;
-
+        String san;
+        final String check;
         if (tempBoard.doMove(lan)) {
+            check = inCheck(tempBoard, lan);
             final MoveBackup last = tempBoard.getBackup().getLast();
-            if (log.isDebugEnabled()) {
-                log.debug("Move applied: {}", last);
+            if (log.isTraceEnabled()) {
+                log.trace("Move applied: {}", last);
             }
             if (Square.NONE.equals(last.getEnPassant()) || Square.NONE.equals(last.getEnPassantTarget())) {
                 san = MoveParserFromAN.lanToSan(chessboard, lan);
@@ -54,12 +54,30 @@ public final class MoveUtils {
         } else {
             throw new IllegalArgumentException("Movimiento LAN no válido: " + lan);
         }
-
+        if (!check.isEmpty()) {
+            // If check or check-mate, append the symbol
+            san += check;
+        }
         if (log.isDebugEnabled()) {
             log.debug("LAN: {} -> SAN: {}", lan, san);
         }
 
         return san;
+    }
+
+    private static String inCheck(final Board board, final String lan) {
+      String check = "";
+      if (board.isKingAttacked()) {
+          if (log.isTraceEnabled()) {
+              log.trace("King attacked: {}", lan);
+          }
+          if (board.isMated()) {
+              check = "#";
+          } else {
+              check = "+";
+          }
+      }
+      return check;
     }
 
     private static void validate(final Board board, final Chessboard chessboard, final String lan) {

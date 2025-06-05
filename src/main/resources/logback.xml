@@ -6,6 +6,7 @@
   </appender>
 
   <logger name="org"  level="WARN"/>
+  <logger name="home.stockfish.MoveUtils" level="DEBUG"/>
   <logger name="home" level="INFO"/>
 
   <root level="INFO">
